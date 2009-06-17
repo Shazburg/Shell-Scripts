@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Personal customization login script
-# Should be included by .bashrc or .bash_profile or .profile
+# Customize login shell
+# Add to .bashrc, .bash_profile or .profile by appending:
+#   if [ -f ~/.bash_customize ]; then
+#       . ~/.bash_customize
+#   fi
 
 ########################################################################
 # Non-System Specific Configuations
@@ -11,7 +14,7 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=5000
 
 # This file can change often. Easy reload.
-alias .p='source ~/.bash_shazburg'
+alias .p='source ~/.bash_customize && echo "Reloading bash customizations"'
 
 # Shortcuts
 alias g="grep --color=auto"
@@ -26,13 +29,12 @@ alias hexkey64="dd if=/dev/random bs=1 count=16 2>/dev/null |xxd -ps"
 custom_path() {
     
     local gem_bin="`gem env path | sed -e 's/\:/\/bin\:/' -e 's/$/\/bin/'`"
-    local home_bin="~/bin"
 
     # TODO: Replace with case statment or other more better logic
     export PATH=${gem_bin}:$PATH
 
-    if [ -d ${home_bin} ]; then
-        export PATH=${home_bin}:$PATH
+    if [ -d ~/bin ]; then
+        export PATH=~/bin:$PATH
     fi
 
 }
@@ -77,7 +79,7 @@ bash_prompt() {
     PS1="${W}<`uname -s` shell of doom:\h> [h:\! j:\j] ${EMR}\`ruby -e \"print (%x{git branch 2> /dev/null}.grep(/^\*/).first || '').gsub(/^\* (.+)$/, '\1 ')\"\`${EMY}\w \n ${EMW}\$ ${N}"
 
 }
-bash_prompt
+
 
 # Define Linux specific configuration
 system_linux() {
@@ -87,6 +89,8 @@ system_linux() {
         alias m8='`which geany` $1'
     fi
 
+    # Use custom shell prompt
+    bash_prompt
 }
 
 # Define Mac specific configuration
@@ -100,7 +104,9 @@ system_darwin() {
     if [ -f `which mate` ]; then
         alias m8='`which mate` $1'
     fi
-
+    
+    # Use custom shell prompt
+    bash_prompt
 }
 
 # Are we on Linux?
@@ -109,6 +115,7 @@ if [ `uname -s` = "Linux" ]; then
 fi
 
 # Are we on OS X?
+# TODO: Not yet tested
 if [ `uname -s` = "Darwin" ]; then
     system_darwin
 fi
