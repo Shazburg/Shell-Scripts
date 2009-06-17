@@ -19,10 +19,10 @@ alias .p='source ~/.bash_customize && echo "Reloading bash customizations..."'
 # Shortcuts
 alias g="grep --color=auto"
 alias h="history"
-alias ll="ls -laF"
+alias ll="ls -laF --color=auto"
 alias x="exit"
 alias ?="h | g $1"
-alias ps?="ps ax | grep $1"
+alias ps?="ps ax | g $1"
 alias hexkey64="dd if=/dev/random bs=1 count=16 2>/dev/null |xxd -ps"
 
 # Function for containing PATH customizations
