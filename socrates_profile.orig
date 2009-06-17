@@ -51,19 +51,6 @@ alias s-m="ruby script/merb"
 
 # ssh & telnet shortcuts
 alias site5-mysql="ssh -Ng -L 3307:127.0.0.1:3306 site5"
-alias cyric="scp ~/.profile jm@cyric.it.renoimage.com:~/.bash_profile && \
-							ssh jm@cyric.it.renoimage.com"
-alias cyric-mysql="ssh -Ng -L 3307:127.0.0.1:3306 cyric.it.renoimage.com -l jm"
-alias lathander="scp ~/.profile jm@lathander.north.renoimage.com:~/.bash_profile && \
-									ssh jm@lathander.north.renoimage.com"
-alias lathander-mysql="ssh -Ng -L 3307:lathander.north.renoimage.com:3306 -l jm"
-alias bane="scp ~/.profile jm@bane.renoimage.com:~/.bash_profile && \
-						ssh jm@bane.renoimage.com"
-alias bane-mysql="ssh -Ng -L 3307:127.0.0.1:3306 bane.renoimage.com -l jm"
-alias deneir="scp ~/.profile jm@deneir.north.renoimage.com:~/.bash_profile && \
-							ssh jm@deneir.north.renoimage.com"
-alias gond="scp ~/.profile jm@gond.north.renoimage.com:~/.bash_profile && \
-							ssh jm@gond.north.renoimage.com"
 alias rootshell="scp ~/.profile jm@rootshell.be:~/.profile && \
 									ssh jm@rootshell.be"
 alias site5="ssh site5"
