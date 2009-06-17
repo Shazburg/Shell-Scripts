@@ -1,0 +1,154 @@
+# include .bashrc if it exists
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d ~/bin ] ; then
+    PATH=~/bin:"${PATH}"
+fi
+
+# Set MANPATH so it includes users' private man if it exists
+# if [ -d "${HOME}/man" ]; then
+#   MANPATH=${HOME}/man:${MANPATH}
+# fi
+
+# Set INFOPATH so it includes users' private info if it exists
+# if [ -d "${HOME}/info" ]; then
+#   INFOPATH=${HOME}/info:${INFOPATH}
+# fi
+
+
+# I like my bash history to be a bit long
+export HISTFILESIZE=5000
+export HISTCONTROL='ignoreboth'
+
+# vi mode is totally better than emacs
+# set -o vi
+
+# general
+alias g="grep"
+alias h="history"
+alias ll="ls -laF"
+alias x="exit"
+alias ?="h | g $1"
+alias ps?="ps ax | grep $1"
+alias hexkey64="dd if=/dev/random bs=1 count=16 2>/dev/null |xxd -ps"
+
+if [ -f ~/.profile ]; then
+	alias .p="source ~/.profile"
+elif [ -f ~/.bash_profile ]; then
+	alias .p="source ~/.bash_profile"
+fi
+
+# default console
+alias s-g="ruby script/generate"
+alias s-c="ruby script/console"
+alias s-d="ruby script/destroy"
+alias s-s="ruby script/server"
+alias db-m="rake db:migrate $1"
+alias s-m="ruby script/merb"
+
+# ssh & telnet shortcuts
+alias site5-mysql="ssh -Ng -L 3307:127.0.0.1:3306 site5"
+alias cyric="scp ~/.profile jm@cyric.it.renoimage.com:~/.bash_profile && \
+							ssh jm@cyric.it.renoimage.com"
+alias cyric-mysql="ssh -Ng -L 3307:127.0.0.1:3306 cyric.it.renoimage.com -l jm"
+alias lathander="scp ~/.profile jm@lathander.north.renoimage.com:~/.bash_profile && \
+									ssh jm@lathander.north.renoimage.com"
+alias lathander-mysql="ssh -Ng -L 3307:lathander.north.renoimage.com:3306 -l jm"
+alias bane="scp ~/.profile jm@bane.renoimage.com:~/.bash_profile && \
+						ssh jm@bane.renoimage.com"
+alias bane-mysql="ssh -Ng -L 3307:127.0.0.1:3306 bane.renoimage.com -l jm"
+alias deneir="scp ~/.profile jm@deneir.north.renoimage.com:~/.bash_profile && \
+							ssh jm@deneir.north.renoimage.com"
+alias gond="scp ~/.profile jm@gond.north.renoimage.com:~/.bash_profile && \
+							ssh jm@gond.north.renoimage.com"
+alias rootshell="scp ~/.profile jm@rootshell.be:~/.profile && \
+									ssh jm@rootshell.be"
+alias site5="ssh site5"
+
+# tab completion for ssh hosts
+# http://drawohara.tumblr.com/post/6584031# 
+if [ -f ~/.ssh/known_hosts ]; then
+	SSH_COMPLETE=( $(cat ~/.ssh/known_hosts | \
+	cut -f 1 -d ' ' | \
+	sed -e s/,.*//g | \
+	uniq | \
+	egrep -v [0123456789]) )
+	complete -o default -W "${SSH_COMPLETE[*]}" ssh
+fi
+
+# Am I a Mac?
+if [ -d /Library/Application\ Support/Apple ]; then
+	
+	# Where is TextMate's mate?
+	mate=`which mate`
+	
+	# prompt
+	# git branch code from http://unboundimagination.com/Current-Git-Branch-in-Bash-Prompt
+	export PS1="\[\033[0;33m\]<shell of doom:\h> [h:\! j:\j] \[\033[31m\]\`ruby -e \"print (%x{git branch 2> /dev/null}.grep(/^\*/).first || '').gsub(/^\* (.+)$/, '\1 ')\"\`\[\033[37m\]\w \n \[\033[0;33m\]! \[\033[0m\]"
+	
+	# Environment variables
+	if [ -f ~/.awsrc ]; then
+	    . ~/.awsrc
+	fi
+	export MANPATH="/opt/local/man:/usr/local/git/man:$MANPATH"
+	export GITWEB_CONFIG="$HOME/etc/gitweb.conf"
+	export PATH="/opt/local/bin:/opt/local/sbin:/usr/local/git/bin:$HOME/.gem/ruby/1.8/bin:$PATH"
+	export LC_CTYPE=en_US.UTF-8
+	export SVN_EDITOR="$mate -w"
+	export EDITOR="$mate -w"
+	
+	# Postgres controls
+	alias pg_start="/opt/local/lib/postgresql83/bin/pg_ctl -D /opt/local/var/db/postgresql83/defaultdb -l logfile start"
+	
+	alias flushdns="dscacheutil -flushcache"
+	# alias gem_server="ruby -r rubygems/server -e 'Gem::Server.run $1'"
+	
+	# Serial magic is go!
+	alias serial="cu -l /dev/cu.USA19H3d1P1.1 -s 9600"
+	
+	# SQLite3 is too long to type
+	alias sql="sqlite3"
+	
+	# Who loves Edge?  I love Edge.
+	alias edge="~/.railsedge/railties/bin/rails"
+
+	# Textmate magic
+	alias m8="$mate $1"
+	alias m8p="$mate ~/.profile"
+	alias m8irb="$mate ~/.irbrc"
+	alias m8cap="$mate ~/.caprc"
+
+	# Scheme Love
+	alias stk="/Applications/STk/bin/stk-simply"
+	
+	# Python(Monty)
+	alias py="/usr/bin/env python"
+	
+	# TFTPD evil - I'm not sure why import won't work
+	# alias tftpd_import="cp $1 /private/tftpboot/ && chmod 666 /private/tftpboot/$1"	# 
+	# alias tftpd_start="sudo launchctl load -w /System/Library/LaunchDaemons/tftp.plist"
+	# alias tftpd_stop="sudo launchctl unload -w /System/Library/LaunchDaemons/tftp.plist"
+	
+# Am I Linux?
+elif [ -f /vmlinuz ]; then
+	
+	# prompt
+	export PS1="\[\033[0;31m\]<shell of doom:\h> [h:\! j:\j] \w \[\033[0m\]\n \[\033[0;33m\]! \[\033[0m\]"
+	
+	# Environment Variables
+	export SVN_EDITOR="/usr/bin/vim"
+	
+	alias wheel="sudo usermod -G adm,dialout,cdrom,floppy,audio,dip,video,plugdev,scanner,lpadmin,admin -a $1"
+fi
+
+##
+# Your previous /Users/jm/.profile file was backed up as /Users/jm/.profile.macports-saved_2009-02-04_at_18:06:08
+##
+
+# MacPorts Installer addition on 2009-02-04_at_18:06:08: adding an appropriate MANPATH variable for use with MacPorts.
+export MANPATH=/opt/local/share/man:$MANPATH
+# Finished adapting your MANPATH environment variable for use with MacPorts.
+

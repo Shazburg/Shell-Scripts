@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# Personal customization login script
+# Should be included by .bashrc or .bash_profile or .profile
+
+########################################################################
+# Non-System Specific Configuations
+########################################################################
+
+# History control
+export HISTCONTROL=ignoreboth
+export HISTFILESIZE=5000
+
+# This file can change often. Easy reload.
+alias .p='source ~/.bash_shazburg'
+
+# Shortcuts
+alias g="grep --color=auto"
+alias h="history"
+alias ll="ls -laF"
+alias x="exit"
+alias ?="h | g $1"
+alias ps?="ps ax | grep $1"
+alias hexkey64="dd if=/dev/random bs=1 count=16 2>/dev/null |xxd -ps"
+
+# Function for containing PATH customizations
+custom_path() {
+    
+    local gem_bin="`gem env path | sed -e 's/\:/\/bin\:/' -e 's/$/\/bin/'`"
+    local home_bin="~/bin"
+
+    # TODO: Replace with case statment or other more better logic
+    export PATH=${gem_bin}:$PATH
+
+    if [ -d ${home_bin} ]; then
+        export PATH=${home_bin}:$PATH
+    fi
+
+}
+custom_path
+
+# Function for custom font w/color list so I never have to look them up again
+bash_prompt() {
+        
+    # regular colors
+    local N="\[\033[0m\]"       # no colors (reset)
+    local K="\[\033[0;30m\]"    # black
+    local R="\[\033[0;31m\]"    # red
+    local G="\[\033[0;32m\]"    # green
+    local Y="\[\033[0;33m\]"    # yellow
+    local B="\[\033[0;34m\]"    # blue
+    local M="\[\033[0;35m\]"    # magenta
+    local C="\[\033[0;36m\]"    # cyan
+    local W="\[\033[0;37m\]"    # white
+
+    # emphasized (bolded) colors
+    local EMK="\[\033[1;30m\]"
+    local EMR="\[\033[1;31m\]"
+    local EMG="\[\033[1;32m\]"
+    local EMY="\[\033[1;33m\]"
+    local EMB="\[\033[1;34m\]"
+    local EMM="\[\033[1;35m\]"
+    local EMC="\[\033[1;36m\]"
+    local EMW="\[\033[1;37m\]"
+
+    # background colors
+    local BGK="\[\033[40m\]"
+    local BGR="\[\033[41m\]"
+    local BGG="\[\033[42m\]"
+    local BGY="\[\033[43m\]"
+    local BGB="\[\033[44m\]"
+    local BGM="\[\033[45m\]"
+    local BGC="\[\033[46m\]"
+    local BGW="\[\033[47m\]"
+
+
+    # Prompt with git branch
+    PS1="${W}<`uname -s` shell of doom:\h> [h:\! j:\j] ${EMR}\`ruby -e \"print (%x{git branch 2> /dev/null}.grep(/^\*/).first || '').gsub(/^\* (.+)$/, '\1 ')\"\`${EMY}\w \n ${EMW}\$ ${N}"
+
+}
+bash_prompt
+
+# Define Linux specific configuration
+system_linux() {
+
+    # Shortcut for text editor
+    if [ -f `which geany` ]; then
+        alias m8='`which geany` $1'
+    fi
+
+}
+
+# Define Mac specific configuration
+system_darwin() {
+
+    # Adding appropriate PATH & MANPATH variable for use with MacPorts.
+    export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+    export MANPATH=/opt/local/share/man:$MANPATH
+
+    # Textmate Shortcut (Must have mate command installed from Textmate 'About' Menu)
+    if [ -f `which mate` ]; then
+        alias m8='`which mate` $1'
+    fi
+
+}
+
+# Are we on Linux?
+if [ `uname -s` = "Linux" ]; then
+    system_linux
+fi
+
+# Are we on OS X?
+if [ `uname -s` = "Darwin" ]; then
+    system_darwin
+fi
+
