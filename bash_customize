@@ -14,7 +14,7 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=5000
 
 # This file can change often. Easy reload.
-alias .p='source ~/.bash_customize && echo "Reloading bash customizations"'
+alias .p='source ~/.bash_customize && echo "Reloading bash customizations..."'
 
 # Shortcuts
 alias g="grep --color=auto"
@@ -94,15 +94,21 @@ system_linux() {
 }
 
 # Define Mac specific configuration
+# TODO: Not yet tested
 system_darwin() {
+    
+    local textmate=`which mate`
+    
+    # Textmate for every editor
+    export EDITOR=${textmate}
 
     # Adding appropriate PATH & MANPATH variable for use with MacPorts.
     export PATH=/opt/local/bin:/opt/local/sbin:$PATH
     export MANPATH=/opt/local/share/man:$MANPATH
 
     # Textmate Shortcut (Must have mate command installed from Textmate 'About' Menu)
-    if [ -f `which mate` ]; then
-        alias m8='`which mate` $1'
+    if [ -f ${textmate} ]; then
+        alias m8='${textmate} $1'
     fi
     
     # Use custom shell prompt
