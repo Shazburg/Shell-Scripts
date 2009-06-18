@@ -149,7 +149,9 @@ system_darwin() {
     fi
     
     # Use custom shell prompt
+    PROMPT_COMMAND=bash_prompt_command
     bash_prompt
+    unset bash_prompt
 }
 
 # Are we on Linux?
