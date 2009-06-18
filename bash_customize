@@ -40,8 +40,43 @@ custom_path() {
 }
 custom_path
 
+##################################################
+# Fancy PWD display function
+##################################################
+# The home directory (HOME) is replaced with a ~
+# The last pwdmaxlen characters of the PWD are displayed
+# Leading partial directory names are striped off
+# /home/me/stuff          -> ~/stuff               if USER=me
+# /usr/share/big_dir_name -> ../share/big_dir_name if pwdmaxlen=20
+##################################################
+bash_prompt_command() {
+    # How many characters of the $PWD should be kept
+    local pwdmaxlen=25
+    # Indicate that there has been dir truncation
+    local trunc_symbol=".."
+    local dir=${PWD##*/}
+    pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+    NEW_PWD=${PWD/#$HOME/\~}
+    local pwdoffset=$(( ${#NEW_PWD} - pwdmaxlen ))
+    if [ ${pwdoffset} -gt "0" ]
+    then
+        NEW_PWD=${NEW_PWD:$pwdoffset:$pwdmaxlen}
+        NEW_PWD=${trunc_symbol}/${NEW_PWD#*/}
+    fi
+}
+
+
 # Function for custom font w/color list so I never have to look them up again
 bash_prompt() {
+
+    case $TERM in
+     xterm*|rxvt*)
+         local TITLEBAR='\[\033]0;\u:${NEW_PWD}\007\]'
+          ;;
+     *)
+         local TITLEBAR=""
+          ;;
+    esac
         
     # regular colors
     local N="\[\033[0m\]"       # no colors (reset)
@@ -76,7 +111,7 @@ bash_prompt() {
 
 
     # Prompt with git branch
-    PS1="${W}<`uname -s` shell of doom:\h> [h:\! j:\j] ${EMR}\`ruby -e \"print (%x{git branch 2> /dev/null}.grep(/^\*/).first || '').gsub(/^\* (.+)$/, '\1 ')\"\`${EMY}\w \n ${EMW}\$ ${N}"
+    PS1="${W}<`uname -s` shell of doom:\h> [h:\! j:\j] ${EMR}\`ruby -e \"print (%x{git branch 2> /dev/null}.grep(/^\*/).first || '').gsub(/^\* (.+)$/, '\1 ')\"\`${EMY}\${NEW_PWD} \n ${EMW}\$ ${N}"
 
 }
 
@@ -90,7 +125,9 @@ system_linux() {
     fi
 
     # Use custom shell prompt
+    PROMPT_COMMAND=bash_prompt_command
     bash_prompt
+    unset bash_prompt
 }
 
 # Define Mac specific configuration
