@@ -140,8 +140,10 @@ system_darwin() {
     export EDITOR=${textmate}
 
     # Adding appropriate PATH & MANPATH variable for use with MacPorts.
-    export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-    export MANPATH=/opt/local/share/man:$MANPATH
+    if [ -d /opt/local/etc/macports ]; then
+        export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+        export MANPATH=/opt/local/share/man:$MANPATH
+    fi
 
     # Textmate Shortcut (Must have mate command installed from Textmate 'About' Menu)
     if [ -f ${textmate} ]; then
