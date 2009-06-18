@@ -137,7 +137,9 @@ system_darwin() {
     local textmate=`which mate`
     
     # Textmate for every editor
-    export EDITOR=${textmate}
+    if [ -f ${textmate} ]; then
+        export EDITOR=${textmate}
+    fi
 
     # Adding appropriate PATH & MANPATH variable for use with MacPorts.
     if [ -d /opt/local/etc/macports ]; then
