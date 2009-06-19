@@ -159,7 +159,7 @@ system_darwin() {
 
     # Textmate Shortcut (Must have mate command installed from Textmate 'About' Menu)
     if [ -f ${textmate} ]; then
-        alias m8='${textmate} $1'
+        alias m8="${textmate} $1"
     fi
     
     # Use custom shell prompt
