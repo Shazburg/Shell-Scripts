@@ -128,8 +128,8 @@ bash_prompt() {
 system_linux() {
 
     # Shortcut for text editor
-    if [ -f `which geany` ]; then
-        alias m8='`which geany` $1'
+    if [ -f `which komodo` ]; then
+        alias m8='`which komodo` $1'
     fi
 
     # Use custom shell prompt
