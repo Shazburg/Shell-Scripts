@@ -1,5 +1,6 @@
 ---
 gem: --no-ri --no-rdoc
+:gemhome: $HOME/.gem/ruby/1.8
 :update_sources: true
 :sources:
 - http://gems.rubyforge.org
