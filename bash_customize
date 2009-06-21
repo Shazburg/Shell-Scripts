@@ -27,6 +27,8 @@ alias hexkey64="dd if=/dev/random bs=1 count=16 2>/dev/null |xxd -ps"
 
 add_gem_to_path() {
 
+    export GEM_HOME=$HOME/.gem/ruby/1.8
+
     gem env path &> /dev/null
     
     if [ $? -eq 0 ]; then
